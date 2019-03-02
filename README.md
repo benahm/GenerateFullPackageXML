@@ -1,9 +1,9 @@
 # GenerateFullPackageXML
 
-Generate a full Package.xml using the Salesforce CLI new commands 
+Generate a full Package.xml using the Salesforce CLI new mdapi commands 
 
-* [describemetadata](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_force_mdapi.htm)
-* [listmetadata](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_force_mdapi.htm)
+* [mdapi:describemetadata](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_force_mdapi.htm)
+* [mdapi:listmetadata](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_force_mdapi.htm)
 
 
 
