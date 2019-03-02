@@ -16,9 +16,9 @@ Generate a full Package.xml using the Salesforce CLI new commands
 
 ## Usage 
 
-    generateFullPackageXML.sh <APIVERSION>  <OUTPUTFILE>
+    $ GenerateFullPackageXML.sh <APIVERSION>  <OUTPUTFILE>
   
   
  Example 
  
-    generateFullPackageXML.sh '45.0' './Package.xml'
+    $ GenerateFullPackageXML.sh '45.0' './Package.xml'
