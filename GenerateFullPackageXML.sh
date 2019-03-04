@@ -9,11 +9,11 @@
 
 
 # Mapping metadata type folder for the inFolder=true metadata types
-declare -A inFolderMapping
-inFolderMapping["Report"]="ReportFolder";
-inFolderMapping["Dashboard"]="DashboardFolder"
-inFolderMapping["Document"]="DocumentFolder"
-inFolderMapping["EmailTemplate"]="EmailFolder"
+declare -A inFolderMetdataMapping
+inFolderMetdataMapping["Report"]="ReportFolder";
+inFolderMetdataMapping["Dashboard"]="DashboardFolder"
+inFolderMetdataMapping["Document"]="DocumentFolder"
+inFolderMetdataMapping["EmailTemplate"]="EmailFolder"
 
 
 #######################################
@@ -41,13 +41,13 @@ function generateMemberXML(){
 }
 
 #######################################
-# Convert JSON list metadatas to a list
+# Convert JSON list metadata to a list
 # Arguments:
 #   list metadata names in JSON format
 # Returns:
 #   list of metadata names
 #######################################
-function convertListMetadatas(){
+function convertListMetadata(){
     local listMetadataJSON=$1
 
     if [ "${listMetadataJSON}" != "null" ]; then
@@ -82,24 +82,24 @@ function listMetadataNames(){
     ## metadata type in folder
     if [ "${metadataTypeInFolder}" == "true" ]; then
         # list folders
-        local listMetadataFolderResult=$(echo $(sfdx force:mdapi:listmetadata -a ${apiVersion} -m ${inFolderMapping[${metadataTypeName}]} --json) | jq '.result')
-        local listMetadataFolders=$(convertListMetadatas "${listMetadataFolderResult}")
+        local listMetadataFolderResult=$(echo $(sfdx force:mdapi:listmetadata -a ${apiVersion} -m ${inFolderMetdataMapping[${metadataTypeName}]} --json) | jq '.result')
+        local listMetadataFolders=$(convertListMetadata "${listMetadataFolderResult}")
         local listMetadataAllFolderItems=""
         # loop through folders
         IFS=":" read -ra listMetadataFoldersArray <<< "${listMetadataFolders}"
         for folder in ${listMetadataFoldersArray[@]}; do 
             # list folder items
             local listMetadataFolderItemResult=$(echo $(sfdx force:mdapi:listmetadata -a ${apiVersion} -m ${metadataTypeName} --folder ${folder} --json) | jq '.result')
-            local listMetadataFolderItems="$(convertListMetadatas "${listMetadataFolderItemResult}")"
+            local listMetadataFolderItems="$(convertListMetadata "${listMetadataFolderItemResult}")"
             if [ "${listMetadataFolderItems}" != "" ]; then
                 listMetadataAllFolderItems="${listMetadataAllFolderItems}${listMetadataFolderItems}"
             fi
         done
-        local listMetadatas="${listMetadataFolders}${listMetadataAllFolderItems}"
-        echo "${listMetadatas::-1}"
+        local listMetadata="${listMetadataFolders}${listMetadataAllFolderItems}"
+        echo "${listMetadata::-1}"
     else 
         local listMetadataResult=$(echo $(sfdx force:mdapi:listmetadata -a ${apiVersion} -m ${metadataTypeName} --json) | jq '.result')
-        echo "$(convertListMetadatas "${listMetadataResult}")"
+        echo "$(convertListMetadata "${listMetadataResult}")"
     fi
     
 }
@@ -134,7 +134,7 @@ function generateTypeXML(){
 
 
 #######################################
-# Generate XML for a package
+# Generate Package.xml
 # Arguments:
 #   api version
 # Returns:
@@ -143,7 +143,7 @@ function generateTypeXML(){
 function generatePackageXML(){
     local apiVersion=$1
 
-    local describeMetadatas=$(sfdx force:mdapi:describemetadata -a ${apiVersion} --json | jq -r '.result.metadataObjects | .[] | "\(.xmlName) \(.inFolder)"' | tr '\r' ' ')
+    local describeMetadata=$(sfdx force:mdapi:describemetadata -a ${apiVersion} --json | jq -r '.result.metadataObjects | .[] | "\(.xmlName) \(.inFolder)"' | tr '\r' ' ')
     
     echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
     echo '<Package xmlns="http://soap.sforce.com/2006/04/metadata">'
@@ -153,7 +153,7 @@ function generatePackageXML(){
         if [ "${typeXML}" != "" ]; then
             echo "${typeXML}"
         fi
-    done <<< "$describeMetadatas"
+    done <<< "$describeMetadata"
     echo "  <version>${apiVersion}</version>"
     echo '</Package>'
 
