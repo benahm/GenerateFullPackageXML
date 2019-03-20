@@ -22,3 +22,8 @@ Generate a full Package.xml using the Salesforce CLI new mdapi commands
  Example 
  
     $ GenerateFullPackageXML.sh 45.0 ./Package.xml
+
+
+## More 
+
+Check out my article on Medium : [Generate a full Package.xml using the Salesforce CLI](https://medium.com/@medben/generate-a-full-package-xml-using-the-salesforce-cli-9e2b4e404569)
